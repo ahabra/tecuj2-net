@@ -18,7 +18,7 @@ public class HtpClient_IntTest {
 	public void testGet() {
 		HtpResponse htpResponse = sut.url(URL_HTTP).get();
 		assertTrue(htpResponse.isSuccess);
-		assertEquals(com.tek271.util2.http.HtpMediaType.textHtml.text, htpResponse.type);
+		assertEquals(HtpMediaType.textHtml.text, htpResponse.type);
 		assertEquals("OK", htpResponse.reason);
 		assertTrue(htpResponse.text.contains("<title>Example Domain</title>"));
 	}
