@@ -1,6 +1,7 @@
 package com.tek271.util2.net.email;
 
 
+import com.tek271.util2.net.http.Url;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.tek271.util2.net.http.HttpTools.isHttp;
-import static com.tek271.util2.net.http.HttpTools.url;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class Emailer {
@@ -69,7 +69,7 @@ public class Emailer {
 	public void attach(String path, String name, String description) {
 		EmailAttachment attachment = createAttachment(name, description);
 		if (isHttp(path)) {
-			attachment.setURL(url(path));
+			attachment.setURL(Url.toURL(path));
 		} else {
 			attachment.setPath(path);
 		}
