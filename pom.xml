@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>com.tek271.util2</groupId>
 			<artifactId>tecuj2</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
 </project>

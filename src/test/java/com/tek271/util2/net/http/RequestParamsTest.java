@@ -7,8 +7,7 @@ import static com.tek271.util2.net.http.RequestParams.MASK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RequestParamsTest {
-	private final RequestParams sut = new RequestParams();
-
+	private RequestParams sut = new RequestParams();
 
 	@Test
 	public void testParseWithEmptyString() {
@@ -52,8 +51,9 @@ public class RequestParamsTest {
 
 	@Test
 	public void testGetText() {
+		sut = new RequestParams();
 		sut.add("a", "1").add("b", "2");
-//		assertEquals("a=1&b=2", sut.getText());
+		assertEquals("a=1&b=2", sut.getText());
 	}
 
 	@Test
