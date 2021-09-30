@@ -11,6 +11,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import java.util.concurrent.TimeUnit;
 
+/** Simplify Establishing and sending requests over HTTP or HTTPS */
 public class HtpClient {
 	private static final Logger LOGGER = LogManager.getLogger(HtpClient.class);
 

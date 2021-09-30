@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
+/** General HTTP utils */
 public class HttpTools {
 
 	public static boolean isHttp(String path) {

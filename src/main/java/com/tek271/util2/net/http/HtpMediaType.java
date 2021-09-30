@@ -1,5 +1,6 @@
 package com.tek271.util2.net.http;
 
+/** Different supported media types */
 public enum HtpMediaType {
 	textPlain("text/plain"),
 	textHtml("text/html"),
