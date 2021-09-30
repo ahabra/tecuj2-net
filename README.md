@@ -2,8 +2,8 @@
 
 * Author Abdul Habra
 
-A library to simplify network programming. Currently, it has the following email and 
-http connection utilities.
+A library to simplify network programming. Currently, it has email and 
+http utilities.
 
 ## Quick Documentation
 
@@ -64,4 +64,3 @@ Parse a url string or convert to a `URL` object.
 
 ## Change Log
 * 2021.09.29 First public release
-* 
