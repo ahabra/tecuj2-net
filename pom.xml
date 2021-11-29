@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.tek271</groupId>
 	<artifactId>tecuj2-net</artifactId>
-	<version>0.0.2</version>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Java networking utils</description>
@@ -58,6 +58,13 @@
 					<source>11</source>
 					<target>11</target>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- required to run junit with maven -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
 			</plugin>
 
 			<plugin>
@@ -128,14 +135,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.7.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.7.2</version>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.8.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -171,7 +172,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
-			<version>11.0.6</version>
+			<version>11.0.7</version>
 		</dependency>
 
 
