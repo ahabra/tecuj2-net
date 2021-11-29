@@ -1,9 +1,8 @@
 package com.tek271.util2.net.http;
 
 import com.tek271.util2.collection.ListOfPairs;
-import org.eclipse.jetty.client.api.ContentProvider;
 import org.eclipse.jetty.client.api.Request;
-import org.eclipse.jetty.client.util.StringContentProvider;
+import org.eclipse.jetty.client.util.StringRequestContent;
 
 import java.nio.charset.StandardCharsets;
 
@@ -22,14 +21,16 @@ public class HtpRequest {
 	}
 
 	public HtpRequest addHeadersToRequest(Request request) {
-		headers.forEach(request::header);
+		headers.forEach((k,v) -> {
+			request.headers(httpFields -> httpFields.add(k, v));
+		});
 		return this;
 	}
 
 	public HtpRequest setRequestData(Request request) {
-		if (textToPost != null && htpMethod==HtpMethod.POST) {
-			ContentProvider cp = new StringContentProvider(textToPost, StandardCharsets.UTF_8);
-			request.content(cp, htpMediaType.text);
+		if (textToPost != null && htpMethod == HtpMethod.POST) {
+			StringRequestContent content = new StringRequestContent(textToPost, StandardCharsets.UTF_8);
+			request.body(content);
 		}
 		parameters.forEach(request::param);
 		return this;
