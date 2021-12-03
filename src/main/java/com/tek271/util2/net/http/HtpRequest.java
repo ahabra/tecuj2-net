@@ -7,14 +7,13 @@ import java.util.concurrent.TimeUnit;
 
 public class HtpRequest {
 	private HtpMethod method = HtpMethod.GET;
-	private Url url = new Url();
+	private final Url url = new Url();
 	private boolean trustAllSsl = false;
-	private ListOfPairs<String, String> headers = new ListOfPairs<>();
+	private final ListOfPairs<String, String> headers = new ListOfPairs<>();
 	private HtpMediaType contentType = HtpMediaType.textPlain;
 	private String textToPost;
 	private long timeout = 30;
 	private TimeUnit timeoutUnit = TimeUnit.SECONDS;
-
 
 
 	public HtpRequest method(HtpMethod htpMethod) {

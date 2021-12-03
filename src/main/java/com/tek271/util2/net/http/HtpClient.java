@@ -16,11 +16,15 @@ public class HtpClient {
 	public HtpResponse run(HtpRequest request) {
 		LOGGER.debug(request.toString());
 		HttpClient jettyClient = createJettyClient(request);
-		start(jettyClient, request);
+		ContentResponse contentResponse;
+		try {
+			start(jettyClient, request);
+			Request jettyRequest = HttpTools.htpRequestToJettyRequest(request, jettyClient);
+			contentResponse = send(jettyRequest, request);
+		} finally {
+			stop(jettyClient, request);
+		}
 
-		Request jettyRequest = HttpTools.htpRequestToJettyRequest(request, jettyClient);
-		ContentResponse contentResponse = send(jettyRequest, request);
-		stop(jettyClient, request);
 		return new HtpResponse(contentResponse);
 	}
 
@@ -43,17 +47,20 @@ public class HtpClient {
 		return sslContextFactory;
 	}
 
-	private static void start(HttpClient httpClient, HtpRequest request) {
+	private static void start(HttpClient jettyClient, HtpRequest request) {
 		try {
-			httpClient.start();
+			jettyClient.start();
 		} catch (Exception e) {
 			throw new RuntimeException("Start failed: " + request , e);
 		}
 	}
 
-	private static void stop(HttpClient httpClient, HtpRequest request) {
+	private static void stop(HttpClient jettyClient, HtpRequest request) {
+		if (!jettyClient.isStarted() || jettyClient.isStopped()) {
+			return;
+		}
 		try {
-			httpClient.stop();
+			jettyClient.stop();
 		} catch (Exception e) {
 			throw new RuntimeException("Stop failed: " + request , e);
 		}
