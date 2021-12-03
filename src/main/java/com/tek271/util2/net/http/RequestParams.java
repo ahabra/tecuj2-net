@@ -47,6 +47,10 @@ public class RequestParams extends ListOfPairs<String, String> {
 		return this;
 	}
 
+	public Set<String> getExcludedParams() {
+		return excludedParams;
+	}
+
 	@Override
 	public String toString() {
 		return stream().map(this::termToString).collect(joining(AMP));

@@ -29,6 +29,9 @@ public class Url {
 
 	@Override
 	public String toString() {
+		if (requestParams.isEmpty()) {
+			return base;
+		}
 		return base + Q + requestParams.toString();
 	}
 
