@@ -9,126 +9,61 @@ import org.eclipse.jetty.client.dynamic.HttpClientTransportDynamic;
 import org.eclipse.jetty.io.ClientConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
-import java.util.concurrent.TimeUnit;
-
-/** Simplify Establishing and sending requests over HTTP or HTTPS */
 public class HtpClient {
 	private static final Logger LOGGER = LogManager.getLogger(HtpClient.class);
 
-	public final HtpRequest htpRequest = new HtpRequest();
-	long timeout = 30;
-	TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
-	public HtpClient url(String text) {
-		htpRequest.url(text);
-		return this;
-	}
+	public HtpResponse run(HtpRequest request) {
+		LOGGER.debug(request.toString());
+		HttpClient jettyClient = createJettyClient(request);
+		start(jettyClient, request);
 
-	public HtpClient loggingExcludedParams(String... excluded) {
-		htpRequest.url.loggingExcludedParams(excluded);
-		return this;
-	}
-
-	public HtpClient trustAllSsl(boolean isTrust) {
-		htpRequest.trustAllSsl = isTrust;
-		return this;
-	}
-
-	public HtpClient trustAllSsl() {
-		return trustAllSsl(true);
-	}
-
-	public HtpClient header(String name, String value) {
-		htpRequest.headers.add(name, value);
-		return this;
-	}
-
-	public HtpClient requestParam(String name, String value) {
-		htpRequest.parameters.add(name, value);
-		return this;
-	}
-
-	public HtpClient requestContentType(HtpMediaType mediaType) {
-		htpRequest.htpMediaType = mediaType;
-		return this;
-	}
-
-	public HtpClient textToPost(String text) {
-		htpRequest.textToPost = text;
-		return this;
-	}
-
-	public HtpClient timeout(long timeout, TimeUnit timeoutUnit) {
-		this.timeout = timeout;
-		this.timeoutUnit = timeoutUnit;
-		return this;
-	}
-
-	public HtpResponse get() {
-		htpRequest.htpMethod = HtpMethod.GET;
-		return run();
-	}
-
-	public HtpResponse post() {
-		htpRequest.htpMethod = HtpMethod.POST;
-		return run();
-	}
-
-	private HtpResponse run() {
-		LOGGER.debug(htpRequest.htpMethod + " " + htpRequest.url.toString());
-		HttpClient httpClient = createHttpClient();
-		start(httpClient);
-		Request request = httpClient.newRequest(htpRequest.url.getText())
-				.method(htpRequest.htpMethod.toString())
-				.timeout(timeout, timeoutUnit);
-
-		htpRequest.addHeadersToRequest(request);
-		htpRequest.setRequestData(request);
-		ContentResponse contentResponse = send(request);
-		stop(httpClient);
+		Request jettyRequest = HttpTools.htpRequestToJettyRequest(request, jettyClient);
+		ContentResponse contentResponse = send(jettyRequest, request);
+		stop(jettyClient, request);
 		return new HtpResponse(contentResponse);
 	}
 
-	private HttpClient createHttpClient() {
+
+	private static HttpClient createJettyClient(HtpRequest request) {
 		ClientConnector clientConnector = new ClientConnector();
-		clientConnector.setSslContextFactory(createSslContextFactory());
+		clientConnector.setSslContextFactory(createSslContextFactory(request));
 		HttpClientTransportDynamic transport = new HttpClientTransportDynamic(clientConnector);
 
-		HttpClient httpClient = new HttpClient(transport);
+		HttpClient jettyClient = new HttpClient(transport);
 
-		httpClient.setFollowRedirects(false);
-		return httpClient;
+		jettyClient.setFollowRedirects(false); // ???
+		return jettyClient;
 	}
 
-	private SslContextFactory.Client createSslContextFactory() {
-		if (! htpRequest.trustAllSsl) return null;
+	private static SslContextFactory.Client createSslContextFactory(HtpRequest request) {
+		if (!request.isTrustAllSsl()) return null;
 		SslContextFactory.Client sslContextFactory = new SslContextFactory.Client();
 		sslContextFactory.setTrustAll(true);
 		return sslContextFactory;
 	}
 
-	private void start(HttpClient httpClient) {
+	private static void start(HttpClient httpClient, HtpRequest request) {
 		try {
 			httpClient.start();
 		} catch (Exception e) {
-			throw new RuntimeException("Start failed: " + htpRequest , e);
+			throw new RuntimeException("Start failed: " + request , e);
 		}
 	}
 
-	private void stop(HttpClient httpClient) {
+	private static void stop(HttpClient httpClient, HtpRequest request) {
 		try {
 			httpClient.stop();
 		} catch (Exception e) {
-			throw new RuntimeException("Stop failed: " + htpRequest , e);
+			throw new RuntimeException("Stop failed: " + request , e);
 		}
 	}
 
-	private ContentResponse send(Request request) {
+	private static ContentResponse send(Request jettyRequest, HtpRequest request) {
 		try {
-			return request.send();
+			return jettyRequest.send();
 		} catch (Exception e) {
-			throw new RuntimeException("Send failed: " + htpRequest, e);
+			throw new RuntimeException("Send failed: " + request, e);
 		}
 	}
-
 }

@@ -6,25 +6,25 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class HtpRequest2Test {
+class HtpRequestTest {
 
 	@Test
 	void toString_simpleGET() {
-		HtpRequest2 sut = new HtpRequest2();
+		HtpRequest sut = new HtpRequest();
 		sut.url("a.b");
 		assertEquals("GET a.b", sut.toString());
 	}
 
 	@Test
 	void toString_inlineParams() {
-		HtpRequest2 sut = new HtpRequest2();
+		HtpRequest sut = new HtpRequest();
 		sut.url("www.a.com?a=1");
 		assertEquals("GET www.a.com?a=1", sut.toString());
 	}
 
 	@Test
 	void toString_params() {
-		HtpRequest2 sut = new HtpRequest2();
+		HtpRequest sut = new HtpRequest();
 		sut.url("www.a.com");
 		sut.parameter("a", "1");
 		assertEquals("GET www.a.com?a=1", sut.toString());
@@ -32,7 +32,7 @@ class HtpRequest2Test {
 
 	@Test
 	void toString_fullParams() {
-		HtpRequest2 sut = new HtpRequest2();
+		HtpRequest sut = new HtpRequest();
 		sut.url("www.a.com?a=1");
 		sut.parameter("b", "2");
 		assertEquals("GET www.a.com?a=1&b=2", sut.toString());
@@ -40,7 +40,7 @@ class HtpRequest2Test {
 
 	@Test
 	void toString_excludedParams() {
-		HtpRequest2 sut = new HtpRequest2();
+		HtpRequest sut = new HtpRequest();
 		sut.url("www.a.com");
 		sut.parameter("a", "1");
 		sut.parameter("password", "secret");
@@ -51,7 +51,7 @@ class HtpRequest2Test {
 
 	@Test
 	void testTimeout() {
-		HtpRequest2 sut = new HtpRequest2();
+		HtpRequest sut = new HtpRequest();
 		sut.timeout(1, TimeUnit.SECONDS);
 		assertEquals(1000, sut.getTimeoutMillis());
 	}

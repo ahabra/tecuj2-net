@@ -11,12 +11,14 @@ public class HtpClient_IntTest {
 	private static final String URL_HTTP = "http://www.example.com/";
 	private static final String URL_HTTPS = "https://www.example.com/";
 
-	private HtpClient sut = new HtpClient();
+	private final HtpClient sut = new HtpClient();
 
 
 	@Test
 	public void testGet() {
-		HtpResponse htpResponse = sut.url(URL_HTTP).get();
+		HtpRequest request = new HtpRequest().url(URL_HTTP);
+		HtpResponse htpResponse = sut.run(request);
+
 		assertTrue(htpResponse.isSuccess);
 		assertEquals(HtpMediaType.textHtml.text, htpResponse.type);
 		assertEquals("OK", htpResponse.reason);
@@ -25,7 +27,8 @@ public class HtpClient_IntTest {
 
 	@Test
 	public void testSimpleGetHttps() {
-		HtpResponse htpResponse = sut.trustAllSsl().url(URL_HTTPS).get();
+		HtpRequest request = new HtpRequest().url(URL_HTTPS).trustAllSsl();
+		HtpResponse htpResponse = sut.run(request);
 		assertTrue(htpResponse.isSuccess);
 		assertEquals(HtpMediaType.textHtml.text, htpResponse.type);
 		assertEquals("OK", htpResponse.reason);
@@ -34,24 +37,29 @@ public class HtpClient_IntTest {
 
 	@Test
 	public void testGetWithHeader() {
-		HtpResponse htpResponse = sut.url(URL_HTTP).header("k", "v").get();
+		HtpRequest request = new HtpRequest().url(URL_HTTP).header("k", "v");
+		HtpResponse htpResponse = sut.run(request);
 		assertTrue(htpResponse.isSuccess);
 	}
 
 	@Test
 	public void testPost() {
-		HtpResponse htpResponse = sut.url("http://httpbin.org/post").textToPost("hi").post();
+		HtpRequest request = new HtpRequest().url("http://httpbin.org/post")
+				.textToPost("hi").method(HtpMethod.POST);
+		HtpResponse htpResponse = sut.run(request);
+
 		assertTrue(htpResponse.isSuccess);
 		assertTrue(htpResponse.text.contains("\"data\": \"hi\""));
 	}
 
 	@Test
 	public void testLoggingExcludedParams() {
+		HtpRequest request = new HtpRequest().url("http://bad.url.xyz0?a=1&p=2").loggingExcludedParams("p");
+
 		try {
-			sut.url("http://bad.url.xyz0?a=1&p=2").loggingExcludedParams("p").get();
+			sut.run(request);
 		} catch (Exception e) {
 			assertTrue(e.getMessage().contains("p=" + RequestParams.MASK));
 		}
 	}
-
 }

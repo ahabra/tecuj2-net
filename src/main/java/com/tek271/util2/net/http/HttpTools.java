@@ -29,7 +29,7 @@ public class HttpTools {
 		}
 	}
 
-	public static Request htpRequestToJettyRequest(HtpRequest2 htpRequest, HttpClient jettyClient) {
+	public static Request htpRequestToJettyRequest(HtpRequest htpRequest, HttpClient jettyClient) {
 		Request jettyRequest = jettyClient.newRequest(htpRequest.getUrl().getText());
 		jettyRequest.method(htpRequest.getMethod().toString());
 		jettyRequest.timeout(htpRequest.getTimeoutMillis(), TimeUnit.MILLISECONDS);
@@ -41,7 +41,7 @@ public class HttpTools {
 		return jettyRequest;
 	}
 
-	private static void addPostBody(HtpRequest2 htpRequest, Request jettyRequest) {
+	private static void addPostBody(HtpRequest htpRequest, Request jettyRequest) {
 		if (htpRequest.getMethod() != HtpMethod.POST) return;
 
 		String textToPost = htpRequest.getTextToPost();
