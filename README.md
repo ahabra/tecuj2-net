@@ -64,3 +64,4 @@ Parse a url string or convert to a `URL` object.
 
 ## Change Log
 * 2021.09.29 First public release
+* 2021.12.06 Version 0.1.0. Make HtpRequest a builder.
